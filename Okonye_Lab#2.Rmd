@@ -1,0 +1,88 @@
+---
+title: "Lab#2"
+author: "Ifeoma Okonye"
+date: "2024-01-30"
+output: html_document
+---
+
+```{r}
+
+#install.packages("gapminder")
+library(gapminder)
+data("gapminder")
+head(gapminder, 6)
+```
+
+
+Next, I re-ordered the data in reverse alphabetical order of countries and viewed the first 15 entries. 
+```{r}
+country_reverse <- gapminder[order(gapminder$country, decreasing = TRUE), ]
+head(country_reverse, 15)
+```
+
+
+
+
+2. 
+```{r}
+#Statistic for Life Expectancy
+mean(gapminder$lifeExp)
+median(gapminder$lifeExp)
+sd(gapminder$lifeExp)
+
+#Statistic for Population
+mean(gapminder$pop)
+median(gapminder$pop)
+sd(gapminder$pop)
+
+#Statistic for GDP per Capita
+mean(gapminder$gdpPercap)
+median(gapminder$gdpPercap)
+sd(gapminder$gdpPercap)
+```
+
+
+
+3. 
+```{r}
+#Calculating the mean, median and standard deviation for life expentancy, population and gdp per capita by country. 
+mean_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = mean, na.action = rm)
+head(mean_stat, 10)
+
+
+median_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = median, na.action = rm)
+head(median_stat, 10)
+
+
+sd_stat <- aggregate(cbind(lifeExp, pop, gdpPercap) ~ country, data = gapminder, FUN = sd, na.rm = TRUE)
+#sd_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = function(x) sd(x, na.rm = T)) #alternative method
+head(sd_stat, 10)
+
+
+
+
+#Calculating the mean, median and standard deviation for life expentancy, population and gdp per capita by continent.
+mean_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["continent"], FUN = mean, na.action = rm)
+head(mean_stat, 10)
+
+median_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["continent"], FUN = median, na.action = rm)
+head(median_stat, 10)
+
+sd_stat <- aggregate(cbind(lifeExp, pop, gdpPercap) ~ continent, data = gapminder, FUN = sd, na.rm = TRUE)
+head(sd_stat, 10)
+```
+
+
+
+```{r}
+avg_lifeExp <- aggregate(gapminder[ , "lifeExp"], by = gapminder["year"], FUN = mean, na.action = rm)
+head(avg_lifeExp, 10)
+
+time <- avg_lifeExp$year
+lifeExp <- avg_lifeExp$lifeExp
+plot(time, lifeExp,  panel.first = grid(8, 8),
+     main = "Life Expectancy over Time", pch = 0, cex = 1.2, col = "blue")
+
+```
+
+
