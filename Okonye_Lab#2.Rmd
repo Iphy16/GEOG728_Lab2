@@ -5,25 +5,32 @@ date: "2024-01-30"
 output: html_document
 ---
 
-```{r}
 
+#Introduction
+
+To begin this lab session, I installed the *gapminder* data. I then called the library and displayed the first six rows of my dataset to survey the dataset and see the different variables in the data.
+
+```{r}
 #install.packages("gapminder")
 library(gapminder)
 data("gapminder")
 head(gapminder, 6)
 ```
 
+## Question 1
 
-Next, I re-ordered the data in reverse alphabetical order of countries and viewed the first 15 entries. 
+Next, I re-ordered the data in reverse alphabetical order of countries and viewed the first 15 entries.
+
 ```{r}
 country_reverse <- gapminder[order(gapminder$country, decreasing = TRUE), ]
 head(country_reverse, 15)
 ```
 
 
+## Question 2
 
+I then calculated and displayed the mean, median and standard deviation of the Life  Life expectancy, Population, and GDPperCapita in the gapminder dataset.
 
-2. 
 ```{r}
 #Statistic for Life Expectancy
 mean(gapminder$lifeExp)
@@ -42,47 +49,111 @@ sd(gapminder$gdpPercap)
 ```
 
 
+## Question 3
 
-3. 
+Additionally, I calculated the mean, median and standard deviation of the Life  Life expectancy, Population, and GDPperCapita for each country and continent.
+
 ```{r}
-#Calculating the mean, median and standard deviation for life expentancy, population and gdp per capita by country. 
-mean_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = mean, na.action = rm)
-head(mean_stat, 10)
+#Calculating the mean, median and standard deviation for life expectancy, population and GDP per capita by country.
+
+mean_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], 
+                       by = gapminder["country"], FUN = mean, na.action = rm)
+head(mean_stat, 5)
+
+median_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], 
+                         by = gapminder["country"], FUN = median, na.action = rm)
+head(median_stat, 5)
 
 
-median_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = median, na.action = rm)
-head(median_stat, 10)
-
-
-sd_stat <- aggregate(cbind(lifeExp, pop, gdpPercap) ~ country, data = gapminder, FUN = sd, na.rm = TRUE)
-#sd_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["country"], FUN = function(x) sd(x, na.rm = T)) #alternative method
-head(sd_stat, 10)
-
-
+sd_stat <- aggregate(cbind(lifeExp, pop, gdpPercap) ~ country, 
+                     data = gapminder, FUN = sd, na.rm = TRUE)
+head(sd_stat, 5)
 
 
 #Calculating the mean, median and standard deviation for life expentancy, population and gdp per capita by continent.
-mean_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["continent"], FUN = mean, na.action = rm)
-head(mean_stat, 10)
 
-median_stat <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], by = gapminder["continent"], FUN = median, na.action = rm)
-head(median_stat, 10)
+mean_stat1 <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], 
+                        by = gapminder["continent"], FUN = mean, na.action = rm)
+head(mean_stat1)
 
-sd_stat <- aggregate(cbind(lifeExp, pop, gdpPercap) ~ continent, data = gapminder, FUN = sd, na.rm = TRUE)
-head(sd_stat, 10)
+median_stat1 <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], 
+                          by = gapminder["continent"], FUN = median, na.action = rm)
+head(median_stat1)
+
+sd_stat1 <- aggregate(gapminder[ , c("lifeExp", "pop", "gdpPercap")], 
+                      by = gapminder["continent"], FUN = function(x) sd(x, na.rm = T)) #alternative method
+head(sd_stat1)
 ```
 
 
+## Question 4
+
+I created a scatter plot of the global average Life expectancy over time and displayed the first 5 records for the dataset used to build the plot. I went ahead to Customize the display of the plot to make it easier to understand.
 
 ```{r}
-avg_lifeExp <- aggregate(gapminder[ , "lifeExp"], by = gapminder["year"], FUN = mean, na.action = rm)
-head(avg_lifeExp, 10)
+avg_lifeExp <- aggregate(gapminder[ , "lifeExp"], by = gapminder["year"], 
+                         FUN = mean, na.action = rm)
+head(avg_lifeExp, 5)
 
 time <- avg_lifeExp$year
 lifeExp <- avg_lifeExp$lifeExp
 plot(time, lifeExp,  panel.first = grid(8, 8),
-     main = "Life Expectancy over Time", pch = 0, cex = 1.2, col = "blue")
-
+     main = "Life Expectancy over Time", col = "blue", bg = "red", pch = 21, cex = 2)
+points(time, lifeExp, col = "black", pch = 16, cex = 0.5)
 ```
 
+
+## Question 5
+
+I then pulled in the **Air Quality** dataset from the readily available R datasets and examined the structure. I looked at the class types, header information and the dimensions.
+
+```{r}
+data(airquality)
+a_qal <- airquality 
+
+class(a_qal)
+sapply(a_qal, class)
+
+head(a_qal, 10)
+
+ncol(a_qal)
+nrow(a_qal)
+dim(a_qal)
+```
+
+
+## Question 6 and 7
+
+I went ahead to calculate the general summary for the entire dataset. and then I calculated summary statistics for groups/subsets of the dataset.
+
+```{r}
+summary(a_qal, na.rm = TRUE)
+
+
+summary(a_qal$Ozone, na.rm = TRUE)
+summary(a_qal$Temp, na.rm = TRUE)
+summary(a_qal$Solar.R, na.rm = TRUE)
+summary(a_qal$Wind, na.rm = TRUE)
+summary(a_qal$Month, na.rm = TRUE)
+summary(a_qal$Day, na.rm = TRUE)
+```
+
+
+## Question 8
+
+Finally, I created 2 plots, one showing ungrouped data and the other showing grouped data. I gave each plot a title, descriptive x and y axis labels and customized a few graphic option on the plots.
+
+```{r}
+# Ungrouped Plot
+hist(a_qal$Temp, main = "Frequency of Temperature Variation", breaks = 12, 
+     col = "skyblue", xlab = "Temperature")
+
+# Grouped Plot
+plot(a_qal$Ozone, a_qal$Solar.R, 
+     xlab = "Ozone", ylab = "Solar Radiation", 
+     main = "Plot showing correlation between Ozone and Solar Radiation",
+     pch = 21, col = "black", bg = as.factor(a_qal$Month), cex = 2)
+
+?hist
+```
 
